@@ -1,13 +1,17 @@
 package com.aibuild.lib3mf4j;
 
 import com.aibuild.lib3mf4j.*;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.IOException;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class Lib3MFWrapperTest {
 
     final Lib3MFWrapper wrapper = new Lib3MFWrapper("3mf");
+    final String testFilePath = "target/test-classes/beamLatticeTest1.3mf";
 
     @Test
     public void correctlyReadsVersion() {
@@ -27,7 +31,29 @@ public class Lib3MFWrapperTest {
         assertEquals(minor, 0);
         assertEquals(micro, 0);
     }
-
+    
+    @Test
+    public void correctlyReadsFromFile() throws Lib3MFException {
+        final Model model = wrapper.createModel();
+        final Reader reader = model.queryReader("3mf");
+        reader.readFromFile(testFilePath);
+        final MeshObject mesh = model.getMeshObjectByID(1);
+        assertEquals(mesh.getVertexCount(), 5);
+    }
+    
+    @Test
+    public void correctlyReadsFromBuffer() throws Lib3MFException, IOException {
+        final Model model = wrapper.createModel();
+        final Reader reader = model.queryReader("3mf");
+        final InputStream inputStream = new FileInputStream(testFilePath);
+        final long fileSize = new File(testFilePath).length();
+        final byte[] fileBytes = new byte[(int) fileSize];
+        inputStream.read(fileBytes);
+        reader.readFromBuffer(fileBytes);
+        final MeshObject mesh = model.getMeshObjectByID(1);
+        assertEquals(mesh.getVertexCount(), 5);
+    }
+    
     @Test
     public void correctlyWritesAndReadsBeamLatticeFile() {
         try {
