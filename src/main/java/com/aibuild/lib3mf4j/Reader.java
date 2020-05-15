@@ -72,10 +72,10 @@ public class Reader extends Base {
 	 * @param buffer Buffer to read from
 	 * @throws Lib3MFException
 	 */
-	public void readFromBuffer(char[] buffer) throws Lib3MFException {
+	public void readFromBuffer(byte[] buffer) throws Lib3MFException {
 		Pointer bufferBuffer = new Memory(Math.max(1, 1 * buffer.length));
 		for (int i = 0; i < buffer.length; i++) {
-		  bufferBuffer.setChar(1 * i, buffer[i]);
+		  bufferBuffer.setByte(1 * i, buffer[i]);
 		}
 		mWrapper.checkError(this, mWrapper.lib3mf_reader_readfrombuffer.invokeInt(new java.lang.Object[]{mHandle, (long) buffer.length, bufferBuffer}));
 	}
