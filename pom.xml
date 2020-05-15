@@ -6,7 +6,7 @@
   <groupId>com.aibuild</groupId>
   <artifactId>lib3mf4j</artifactId>
   <packaging>jar</packaging>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
   <name>lib3mf4j</name>
   <dependencies>
     <dependency>
