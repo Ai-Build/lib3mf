@@ -39,8 +39,6 @@ import com.sun.jna.Library;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
-import java.lang.ref.Cleaner;
-
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -48,42 +46,17 @@ import java.util.List;
 
 public class Base {
 
-	protected static final Cleaner mCleaner = Cleaner.create();
-
 	protected Pointer mHandle;
-
 	protected Lib3MFWrapper mWrapper;
 
+	// TODO: check instance releasing requirement
 	public Base(Lib3MFWrapper wrapper, Pointer handle) {
 		mHandle = handle;
 		mWrapper = wrapper;
-		mCleaner.register(this, new InstanceReleaser(this));
 	}
 
 	public Pointer getHandle() {
 		return mHandle;
 	}
-	
-	protected static class InstanceReleaser implements Runnable{
-	
-		protected Pointer mHandle;
-		
-		protected Lib3MFWrapper mWrapper;
-		
-		protected InstanceReleaser(Base instance) {
-			mHandle = instance.mHandle;
-			mWrapper = instance.mWrapper;
-		}
-		
-		@Override
-		public void run() {
-			try {
-				mWrapper.checkError(null, mWrapper.lib3mf_release.invokeInt(new java.lang.Object[]{mHandle}));
-			} catch (Lib3MFException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 }
 
